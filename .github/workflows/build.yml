@@ -1,35 +1,54 @@
-name: Build Heritage AI APK
+name: Build Heritage AI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # The permanent signing key lives in GitHub Secrets (never in the repo)
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      # Every build gets a higher version number than the one before
+      VERSION_CODE: ${{ github.run_number }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract project from ZIP
+      - name: Extract project
         run: |
           unzip HeritageAI.zip
           cp -r HeritageAI/. .
           rm -rf HeritageAI HeritageAI.zip
           echo "✅ Extracted successfully"
 
+      - name: Restore signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/heritage-release.jks"
+            echo "KEYSTORE_FILE=$RUNNER_TEMP/heritage-release.jks" >> "$GITHUB_ENV"
+            echo "🔑 Using the permanent signing key"
+          else
+            echo "⚠️ No signing key secret found: building with a temporary debug key"
+          fi
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 17
 
       - name: Install Gradle and generate wrapper
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.7'
+          gradle-version: 8.7
 
       - name: Generate Gradle wrapper JAR
         run: gradle wrapper --gradle-version 8.7 --distribution-type bin
@@ -43,16 +62,36 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/libs.versions.toml') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # 1) Debug APK: always built first, so a problem in the release build never blocks it
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Upload APK
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Heritage-AI-Debug
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 30
+          name: HeritageAI-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+
+      # 2) Release APK + Play Store bundle (optimised with R8; allowed to fail without
+      #    stopping the build while we confirm the optimised app runs correctly)
+      - name: Build signed release (APK and Play bundle)
+        continue-on-error: true
+        run: ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeritageAI-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: warn
+
+      - name: Upload Play Store bundle (AAB)
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeritageAI-release-aab
+          path: app/build/outputs/bundle/release/*.aab
+          if-no-files-found: warn
